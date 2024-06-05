@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% block title %}Leads{% endblock %}
+{% block content %}
+
+    <div class="py-6 px-6 bg-gradient-to-r from-blue-900 to-teal-500">
+    <h1 class="text-4xl text-white" style="padding-left: 8px; padding-bottom: 12px;">Leads</h1>
+    <a href="{% url 'leads:add' %}" class="inline-block py-3 px-6 mx-auto shadow-lg
+        bg-light-gray-400 text-white
+        rounded-2xl hover:font-bold  hover:text-black" 
+        style="background-color: rgb(231 231 231 / 22%);backdrop-filter: blur(10px);">
+        Add Lead
+    </a>
+        {% if object_list %}
+        <div class="mt-6 flex justify-between">
+                <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Name</p>
+                <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Email</p>
+                <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Priority</p>
+                <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Status</p>
+            </div>
+            {% for lead in object_list %}
+                <div class="flex justify-between">
+                    <p class="py-2 px-2 w-full {% cycle 'bg-gray-100' '' %}">
+                        <a href="{% url 'leads:detail' lead.id %}">{{ lead.name }}</a>
+                    </p>
+                    <p class="py-2 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ lead.email }}</p>
+                    <p class="py-2 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ lead.get_priority_display }}</p>
+                    <p class="py-2 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ lead.get_status_display }}</p>
+                </div>
+                {% endfor %}
+    {% else %}
+            <p class="mt-6 px-2 text-white">There are no entries yet...</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+        <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-900 to-teal-500 py-6 px-6">
+            <div class="bg-white bg-opacity-10 rounded-xl p-8 shadow-lg max-w-md w-full text-white">
+                <h1 class="text-2xl mb-6">{{ title }}</h1>
+
+
+            <form method="post" action=".">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-2">{{ field.label }}</label>
+
+                        {% if field.name == 'priority' or field.name == 'property_type' %}
+                            <div class="relative">
+                                <select name="{{ field.html_name }}" id="{{ field.auto_id }}" class="w-full p-2 rounded-lg border border-transparent focus:outline-none focus:border-white focus:border-opacity-20 bg-opacity-10 bg-white text-white placeholder-white placeholder-opacity-50" required>
+                                    <option value="" disabled selected>Select {{ field.label }}</option>
+                                    {% for choice in field.field.choices %}
+                                    <option value="{{ choice.0 }}" class="text-white bg-gray-400">{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                    
+                                </div>
+                            </div>
+                        {% else %}
+                            <input type="text" name="{{ field.html_name }}" id="{{ field.auto_id }}" class="w-full p-2 rounded-lg border border-transparent focus:outline-none focus:border-white focus:border-opacity-20 bg-opacity-10 bg-white placeholder-white placeholder-opacity-50" value="{{ field.value|default:'' }}" required/>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <br>
+                <div style="display: flex; justify-content: center; align-items: center; height: 32pt;">
+                    <button class="py-3 px-8 bg-indigo-950 text-white 
+                    rounded-xl hover:bg-blue-900 hover:font-bold">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<!doctype html>
+{% load static %}
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{%static 'images/favicon.ico' %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body{
+background: #191654;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #43bbc6,#191654);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left,#43bbc6,#191654); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+  </style>
+</head>
+<body>
+
+<!--NAVBAR-->
+{% include 'core/partials/navbar.html' %}
+<!--END NAVBAR-->
+
+
+<!--Message prompt-->
+  {% if messages %}
+      <div class="py-6 px-6">
+      {% for message in messages %}
+      <div class="py-4 px-4 bg-teal-300 rounded-xl">
+          {{ message }}
+      </div>
+      {% endfor %}
+      </div>
+  {% endif %}
+<!--End message prompt-->
+
+
+{% block content %}{% endblock %}
+
+<!--FOOTER-->
+{% include 'core/partials/footer.html' %}
+<!--END FOOTER-->
+
+</body>
+</html>

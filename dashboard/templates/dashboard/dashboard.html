@@ -1,0 +1,214 @@
+
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+   .div2, .div3, .div4{background: rgba( 255, 255, 255, 0.2 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 11px );
+-webkit-backdrop-filter: blur( 11px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+  }
+  .div2, .div3, .div4{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .leadsquare, .clientsquare, .leadtoclientsquare {
+    padding-top: 25px;
+    text-align: center;
+    font-weight: bolder;
+    width:400px;
+    height: 80px;
+    margin-left: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+ </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="py-6 px-6 ">
+
+    <div class="mb-6 text-4xl text-gray-100 font-serif " >Dashboard</div>
+    <div class="div1" style="width:1250px; height:100px;display: flex;margin-left: -12px;">
+
+<hr>
+   <form action="" method="get">
+
+  <label for="cars">Choose a car:</label>
+        <select>
+  <option type="submit" value="plot" name="plot">plot</option>
+  <option type="submit" value="apatment" name="apartment">apartment</option>
+  <option type="submit" value="readyTomove" name="readyTomove">readyTomove</option>
+       </select>
+</form>s
+<hr>
+{% for result in data %}
+                <tr>
+                    <td>{{result.name}}</td>
+                </tr>
+{% endfor %}
+    {% for result in data1 %}
+                <tr>
+                    <td>{{result.name}}</td>
+                </tr>
+{% endfor %}
+    {% for result in data2 %}
+                <tr>
+                    <td>{{result.name}}</td>
+                </tr>
+{% endfor %}
+
+      <div class="leadsquare text-xl hover:bg-slate-950 text-white" style="background: #f12711;
+background: -webkit-linear-gradient(to right, #f5af19, #f12711);
+background: linear-gradient(to right, #f5af19, #f12711);padding-left: 5px;text-align: left
+">Leads : {{ lead_count }} <img src="{% static 'images/lead.png' %}" style="width: 80px;height: 80px;float: right;margin-top: -25px;"></div><br>
+      <div class="clientsquare text-xl hover:bg-slate-950 text-white" style="background: #00F260;
+background: -webkit-linear-gradient(to right, #0575E6, #00F260);
+background: linear-gradient(to right, #0575E6, #00F260);text-align: left; margin-left:25px;padding-left: 5px;
+">Clients : {{ client_count }} <img src="{% static 'images/client.png' %}" style="width: 70px;height: 65px;float: right;margin-top: -15px;padding-right: 10px;"></div></div><br>
+      <div class="leadtoclientsquare text-xl hover:bg-slate-950 text-white" style="background: #bc4e9c;
+background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);margin-left: 65%;margin-top: -113px;
+background: linear-gradient(to right, #f80759, #bc4e9c); text-align: left;padding-left: 5px;">Leads converted to client : {{ leadtoclient_count }}
+      <img src="{% static 'images/leadclient.png' %}" style="width: 95px;height: 85px;float: right;margin-top: -30px;padding-right: 10px"></div>
+    </div>
+
+  <div class="div2 mt-10 px-8 py-10" style="width:400px; height:400px;display: inline-block;margin-left: 20px;">
+      <canvas id="chart1" style="padding-left: 10px;margin-top: 60px;height:300px" ></canvas>
+  </div>
+<script>
+const ctx = document.getElementById('chart1');
+  var chart1 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Lead vs Client'],
+      datasets: [{
+        label: 'Leads',
+        data: [{{ lead_count }}],
+        backgroundColor:['rgb(226,76,197)'],
+      }
+      ,{
+        label: 'Clients',
+        data: [{{ client_count }}],
+        backgroundColor:['rgb(24,176,188)'],
+      }],
+    },
+    options: {
+           color:['white'],
+        responsive: true,
+      scales: {
+        y: {
+            ticks: { color: 'white', beginAtZero: true },
+          beginAtZero: true,
+            grid: {
+          color: 'white'
+        }
+        },
+          x: {
+        ticks: { color: 'white', beginAtZero: true },
+
+      }
+      }
+    }
+  });
+</script>
+
+  <div class="div3 mt-10 py-10" style="width:400px; height:400px;display: inline-block;margin-left: 20px;">
+    <canvas id="chart2" style="margin-left: 40px;"></canvas>
+  </div>
+
+  <script>
+    var ctx1 = document.getElementById('chart2');
+    var chart2 = new Chart(ctx1, {
+        type: 'doughnut',
+         data: {
+                labels: [{% for topic in property_type_label %} '{{ topic }}', {% endfor %}],
+                datasets: [{
+                    label:'Frequency',
+                    data: [{% for number in property_type %} '{{ number }}', {% endfor %}],
+                    backgroundColor:['rgb(224,162,17)','rgb(226,76,197)', 'rgb(24,176,188)'],
+                    borderWidth:1,
+                }]
+            },
+        options: {
+
+            color:['white'],
+            responsive:true,
+
+        }
+      });
+    </script>
+
+  <div class="div4 px-8 py-10" style="width:400px; height:400px;display: inline-block;margin-left: 20px;">
+    <canvas id="chart3" ></canvas>
+  </div>
+
+<script>
+var ctx2 = document.getElementById('chart3');
+var chart3 = new Chart(ctx2, {
+    type: 'polarArea',
+     data: {
+            labels: [{% for one in priority_label %} '{{ one }}', {% endfor %}],
+            datasets: [{
+                label:'Frequency',
+                data: [{% for two in priority %} '{{ two }}', {% endfor %}],
+               backgroundColor:['rgba(224,162,17,0.82)','rgba(226,76,197,0.82)', 'rgba(24,176,188,0.82)'],
+
+            }]
+        },
+    options: {
+        color:['white'],
+        responsive:true
+    }
+  });
+</script>
+
+<br>
+    <div class="flex space-x-4 my-8" >
+        <div class="px-4 py-6 bg-gray-100 rounded-xl leads" style="margin-left: 20px;width:610px;
+          background: rgba( 255, 255, 255, 0.2 );
+          box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+          backdrop-filter: blur( 11px );
+          -webkit-backdrop-filter: blur( 11px );
+          border-radius: 10px;
+          border: 1px solid rgba( 255, 255, 255, 0.18 );">
+        <h2 class="mb-4 text-lg">Newest leads</h2>
+
+            {% for lead in leads %}
+                <div class="mb-2 lead" >
+                    <h3 class="font-semibold">{{ lead.name }}</h3>
+
+                    <p class="text-xs">Status: {{ lead.get_status_display }}</p>
+                    <p class="text-xs">Priority: {{ lead.get_priority_display }}</p>
+
+                    <a href="{% url 'leads:detail' lead.pk %}">Details</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class=" px-4 py-6 bg-gray-100 rounded-xl clients" style="margin-left: 33px;width:610px;
+        background: rgba( 255, 255, 255, 0.2 );
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur( 11px );
+        -webkit-backdrop-filter: blur( 11px );
+        border-radius: 10px;
+        border: 1px solid rgba( 255, 255, 255, 0.18 );">
+            <h2 class="mb-4 text-lg">Newest clients</h2>
+
+            {% for client in clients %}
+                <div class="mb-2 client">
+                    <h3 class="font-semibold">{{ client.name }}</h3>
+
+                    <a href="{% url 'clients:details' client.pk %}">Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
